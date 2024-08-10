@@ -1,0 +1,68 @@
+server {
+    server_name 158.160.30.245 maksimtaskiyandex.zapto.org
+;
+
+    location /api/ {
+        proxy_pass http://127.0.0.1:8000;
+    }
+
+    location /admin/ {
+        proxy_pass http://127.0.0.1:8000;
+    }
+
+    location / {
+        root   /var/www/taski;
+        index  index.html index.htm;
+        try_files $uri /index.html;
+    }
+        
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/maksiminfrasprint1.zapto.org/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/maksiminfrasprint1.zapto.org/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+
+server {
+    server_name maksiminfrasprint1.zapto.org
+;
+
+    location /api/ {
+        proxy_pass  http://127.0.0.1:8080;
+         alias /var/www/kittygram/media;
+         client_max_body_size 20M;
+    }
+
+    location /admin/ {
+        proxy_pass  http://127.0.0.1:8080;
+    }
+
+    location /cats/ {
+        proxy_pass  http://127.0.0.1:8080;
+    }
+
+    location /media/ {
+        alias /var/www/kittygram/media;
+    }
+
+    location / {
+        root   /var/www/kittygram;
+        index  index.html index.htm;
+        try_files $uri /index.html;
+    }
+
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/maksiminfrasprint1.zapto.org/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/maksiminfrasprint1.zapto.org/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+
+server {
+    if ($host = maksiminfrasprint1.zapto.org) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
